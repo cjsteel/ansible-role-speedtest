@@ -1,0 +1,64 @@
+---
+# speedtest/vars/main.yml
+
+# Debian / Ubuntu
+speedtest_repo_key: 379CE192D401AB61
+speedtest_keyserver: keyserver.ubuntu.com
+speedtest_apt_repo: "deb https://ookla.bintray.com/debian {% if ansible_distribution_release == 'focal' %}bionic{% else %}{{ ansible_distribution_release }}{% endif %} main"
+# RedHat / CentOS / Fedora
+speedtest_yum_repo: https://bintray.com/ookla/rhel/rpm
+speedtest_yum_dest: /etc/yum.repos.d/bintray-ookla-rhel.repo
+
+_speedtest_requirements:
+  default:
+    - apt-transport-https
+    - dirmngr
+    - gnupg1
+  #Alpine:
+  #  - speedtest
+  #Archlinux:
+  #  - speedtest
+  Debian:
+    - apt-transport-https
+    - dirmngr
+    - gnupg1
+  #CentOS:
+  #  - speedtest
+  #CentOS-7:
+  #  - speedtest
+  #Fedora:
+  #  - speedtest
+  #openSUSE Leap:
+  #  - speedtest
+  Ubuntu:
+    - apt-transport-https
+    - dirmngr
+    - gnupg1
+
+speedtest_requirements: "{{ _speedtest_requirements[ansible_distribution ~ '-' ~ ansible_distribution_major_version] | default(_speedtest_requirements[ansible_distribution] | default(_speedtest_requirements['default'])) }}"
+
+_speedtest_packages:
+  default:
+    - speedtest
+
+speedtest_packages: "{{ _speedtest_packages[ansible_distribution ~ '-' ~ ansible_distribution_major_version] | default(_speedtest_packages[ansible_distribution] | default(_speedtest_packages['default'])) }}"
+
+_speedtest_executibles:
+  default:
+    - speedtest
+
+speedtest_executibles: "{{ _speedtest_executibles[ansible_distribution ~ '-' ~ ansible_distribution_major_version] | default(_speedtest_executibles[ansible_distribution] | default(_speedtest_executibles['default'])) }}"
+
+
+
+#_speedtest_config_directory:
+#  default: /etc
+
+#speedtest_config_directory: "{{ _speedtest_config_directory[ansible_distribution] | default(_speedtest_config_directory['default']) }}"
+
+#speedtest_config_file: speedtest.conf
+
+#_speedtest_service:
+#  default: speedtest
+
+#speedtest_service: "{{ _speedtest_service[ansible_distribution] | default(_speedtest_service['default']) }}"

@@ -1,0 +1,62 @@
+---
+# speedtest/tasks/main.yml
+
+## Debian base systems
+
+- name: Add speedtest apt repo key
+  apt_key:
+    id: "{{ speedtest_repo_key }}"
+    keyserver: "{{ speedtest_keyserver }}"
+    state: present
+  when:
+    - ansible_os_family == 'Debian'
+
+- name: Add speedtest apt repo
+  apt_repository:
+    repo: "{{ speedtest_apt_repo }}"
+    filename: "ookla-speedtest"
+    state: present
+    #update_cache: true
+  when:
+    - ansible_os_family == 'Debian'
+
+## Redhat base systems
+
+- name: Download speedtest repo
+  get_url:
+    url: "{{ speedtest_yum_repo_url }}"
+    dest: "{{ speedtest_yum_dest }}"
+    mode: '0644'
+  when:
+    - ansible_os_family == 'RedHat'
+
+## All systems
+
+- name: install requirements
+  package:
+    name: "{{ speedtest_requirements }}"
+    state: present
+  register: speedtest_install_requirements
+  until: speedtest_install_requirements is succeeded
+  retries: 3
+
+- name: install speedtest
+  package:
+    name: "{{ speedtest_packages }}"
+    state: present
+  register: speedtest_install_speedtest
+  until: speedtest_install_speedtest is succeeded
+  retries: 3
+
+#- name: Ensure executables available
+#  stat:
+#    path: "{{ item }}"
+#  register: speedtest_packages_available
+#  loop: ""{{ speedtest_packages }}"
+
+#- name: configure speedtest
+#  template:
+#    src: "{{ speedtest_config_file }}.j2"
+#    dest: "{{ speedtest_config_directory }}/{{ speedtest_config_file }}"
+#  notify:
+#    - restart speedtest

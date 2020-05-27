@@ -1,0 +1,3 @@
+---
+# speedtest/defaults/main.yml
+speedtest_state: present

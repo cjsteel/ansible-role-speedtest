@@ -1,0 +1,9 @@
+---
+# speedtest/handlers/main.yml
+
+- name: restart speedtest
+  service:
+    name: "{{ speedtest_service }}"
+    state: restarted
+  when:
+    - ansible_virtualization_type != "docker"

@@ -1,6 +1,12 @@
 ---
 # speedtest/tasks/main.yml
 
+- name: Ensure for removal of conflicting package.
+  package:
+    name:
+      - speedtest-cli
+    state: absent
+
 ## Debian base systems
 
 - name: Add speedtest apt repo key
